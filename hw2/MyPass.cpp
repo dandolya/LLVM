@@ -14,21 +14,9 @@ struct MyModPass : public PassInfoMixin<MyModPass> {
   }
 
   PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM) {
-    outs() << "[Module] " << M.getName() << '\n';
     for (auto &F : M) {
-      outs() << "[Function] " << F.getName() << " (arg_size: " << F.arg_size()
-             << ")\n";
       if (isFuncLogger(F.getName()) || F.isDeclaration()) {
         continue;
-      }
-
-      for (auto &B : F) {
-        for (auto &I : B) {
-          // Dump Instructions
-          outs() << "Instruction: " << (uint64_t)(&I) << '\n';
-          I.print(outs(), true);
-          outs() << '\n';
-        }
       }
 
       // Prepare builder for IR modification
