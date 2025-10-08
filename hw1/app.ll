@@ -3,299 +3,315 @@ source_filename = "app.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
-@imgNext = internal unnamed_addr global [1024 x [512 x i32]] zeroinitializer, align 16
-@imgPrev = internal unnamed_addr global [1024 x [512 x i32]] zeroinitializer, align 16
-@bufferX = internal global [6200 x i32] zeroinitializer, align 16
-@bufferY = internal global [6200 x i32] zeroinitializer, align 16
-
 ; Function Attrs: nounwind optsize uwtable
-define dso_local void @paint(i32 noundef %0) local_unnamed_addr #0 {
-  br label %2
+define dso_local void @paint(i32 noundef %0, ptr nocapture noundef %1, ptr nocapture noundef readonly %2, ptr noundef %3, ptr noundef %4) local_unnamed_addr #0 {
+  br label %6
 
-2:                                                ; preds = %1, %7
-  %3 = phi i64 [ 0, %1 ], [ %8, %7 ]
-  %4 = phi i32 [ 0, %1 ], [ %29, %7 ]
-  %5 = trunc i64 %3 to i32
-  br label %10
+6:                                                ; preds = %5, %11
+  %7 = phi i64 [ 0, %5 ], [ %12, %11 ]
+  %8 = phi i32 [ 0, %5 ], [ %34, %11 ]
+  %9 = trunc i64 %7 to i32
+  br label %14
 
-6:                                                ; preds = %7
-  tail call void @simPutPixels(ptr noundef nonnull @bufferX, ptr noundef nonnull @bufferY, i32 noundef %0, i32 noundef %29) #4
+10:                                               ; preds = %11
+  tail call void @simPutPixels(ptr noundef %3, ptr noundef %4, i32 noundef %0, i32 noundef %34) #5
   ret void
 
-7:                                                ; preds = %28
-  %8 = add nuw nsw i64 %3, 1
-  %9 = icmp eq i64 %8, 1024
-  br i1 %9, label %6, label %2, !llvm.loop !5
+11:                                               ; preds = %33
+  %12 = add nuw nsw i64 %7, 1
+  %13 = icmp eq i64 %12, 1024
+  br i1 %13, label %10, label %6, !llvm.loop !5
 
-10:                                               ; preds = %2, %28
-  %11 = phi i64 [ 0, %2 ], [ %30, %28 ]
-  %12 = phi i32 [ %4, %2 ], [ %29, %28 ]
-  %13 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %3, i64 %11
-  %14 = load i32, ptr %13, align 4, !tbaa !7
-  %15 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgPrev, i64 0, i64 %3, i64 %11
-  %16 = load i32, ptr %15, align 4, !tbaa !7
-  %17 = icmp eq i32 %14, %16
-  br i1 %17, label %28, label %18
+14:                                               ; preds = %6, %33
+  %15 = phi i64 [ 0, %6 ], [ %35, %33 ]
+  %16 = phi i32 [ %8, %6 ], [ %34, %33 ]
+  %17 = getelementptr inbounds [512 x i32], ptr %2, i64 %7, i64 %15
+  %18 = load i32, ptr %17, align 4, !tbaa !7
+  %19 = getelementptr inbounds [512 x i32], ptr %1, i64 %7, i64 %15
+  %20 = load i32, ptr %19, align 4, !tbaa !7
+  %21 = icmp eq i32 %18, %20
+  br i1 %21, label %33, label %22
 
-18:                                               ; preds = %10
-  %19 = icmp ne i32 %14, %0
-  %20 = icmp sgt i32 %12, 6199
-  %21 = select i1 %19, i1 true, i1 %20
-  br i1 %21, label %28, label %22
+22:                                               ; preds = %14
+  %23 = icmp ne i32 %18, %0
+  %24 = icmp sgt i32 %16, 6199
+  %25 = select i1 %23, i1 true, i1 %24
+  br i1 %25, label %33, label %26
 
-22:                                               ; preds = %18
-  %23 = sext i32 %12 to i64
-  %24 = getelementptr inbounds [6200 x i32], ptr @bufferX, i64 0, i64 %23
-  store i32 %5, ptr %24, align 4, !tbaa !7
-  %25 = getelementptr inbounds [6200 x i32], ptr @bufferY, i64 0, i64 %23
-  %26 = trunc i64 %11 to i32
-  store i32 %26, ptr %25, align 4, !tbaa !7
-  %27 = add nsw i32 %12, 1
-  store i32 %0, ptr %15, align 4, !tbaa !7
-  br label %28
+26:                                               ; preds = %22
+  %27 = sext i32 %16 to i64
+  %28 = getelementptr inbounds i32, ptr %3, i64 %27
+  store i32 %9, ptr %28, align 4, !tbaa !7
+  %29 = getelementptr inbounds i32, ptr %4, i64 %27
+  %30 = trunc i64 %15 to i32
+  store i32 %30, ptr %29, align 4, !tbaa !7
+  %31 = add nsw i32 %16, 1
+  %32 = load i32, ptr %17, align 4, !tbaa !7
+  store i32 %32, ptr %19, align 4, !tbaa !7
+  br label %33
 
-28:                                               ; preds = %10, %18, %22
-  %29 = phi i32 [ %12, %18 ], [ %27, %22 ], [ %12, %10 ]
-  %30 = add nuw nsw i64 %11, 1
-  %31 = icmp eq i64 %30, 512
-  br i1 %31, label %7, label %10, !llvm.loop !11
+33:                                               ; preds = %14, %22, %26
+  %34 = phi i32 [ %16, %22 ], [ %31, %26 ], [ %16, %14 ]
+  %35 = add nuw nsw i64 %15, 1
+  %36 = icmp eq i64 %35, 512
+  br i1 %36, label %11, label %14, !llvm.loop !11
 }
 
+; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(argmem: readwrite)
+declare void @llvm.lifetime.start.p0(i64 immarg, ptr nocapture) #1
+
+; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(argmem: readwrite)
+declare void @llvm.lifetime.end.p0(i64 immarg, ptr nocapture) #1
+
 ; Function Attrs: optsize
-declare void @simPutPixels(ptr noundef, ptr noundef, i32 noundef, i32 noundef) local_unnamed_addr #1
+declare void @simPutPixels(ptr noundef, ptr noundef, i32 noundef, i32 noundef) local_unnamed_addr #2
 
 ; Function Attrs: nounwind optsize uwtable
 define dso_local void @app() local_unnamed_addr #0 {
-  tail call void @llvm.memset.p0.i64(ptr noundef nonnull align 16 dereferenceable(2097152) @imgPrev, i8 0, i64 2097152, i1 false), !tbaa !7
-  tail call void @llvm.memset.p0.i64(ptr noundef nonnull align 16 dereferenceable(2097152) @imgNext, i8 0, i64 2097152, i1 false), !tbaa !7
-  br label %1
+  %1 = alloca [1024 x [512 x i32]], align 16
+  %2 = alloca [1024 x [512 x i32]], align 16
+  %3 = alloca [6200 x i32], align 16
+  %4 = alloca [6200 x i32], align 16
+  call void @llvm.lifetime.start.p0(i64 2097152, ptr nonnull %1) #6
+  call void @llvm.lifetime.start.p0(i64 2097152, ptr nonnull %2) #6
+  call void @llvm.lifetime.start.p0(i64 24800, ptr nonnull %3) #6
+  call void @llvm.lifetime.start.p0(i64 24800, ptr nonnull %4) #6
+  call void @llvm.memset.p0.i64(ptr noundef nonnull align 16 dereferenceable(2097152) %1, i8 0, i64 2097152, i1 false), !tbaa !7
+  call void @llvm.memset.p0.i64(ptr noundef nonnull align 16 dereferenceable(2097152) %2, i8 0, i64 2097152, i1 false), !tbaa !7
+  br label %5
 
-1:                                                ; preds = %0, %108
-  %2 = phi i32 [ %109, %108 ], [ 0, %0 ]
-  br label %4
+5:                                                ; preds = %0, %112
+  %6 = phi i32 [ %113, %112 ], [ 0, %0 ]
+  br label %8
 
-3:                                                ; preds = %108
+7:                                                ; preds = %112
+  call void @llvm.lifetime.end.p0(i64 24800, ptr nonnull %4) #6
+  call void @llvm.lifetime.end.p0(i64 24800, ptr nonnull %3) #6
+  call void @llvm.lifetime.end.p0(i64 2097152, ptr nonnull %2) #6
+  call void @llvm.lifetime.end.p0(i64 2097152, ptr nonnull %1) #6
   ret void
 
-4:                                                ; preds = %1, %7
-  %5 = phi i64 [ 0, %1 ], [ %8, %7 ]
-  %6 = phi i32 [ 0, %1 ], [ %24, %7 ]
-  br label %10
+8:                                                ; preds = %5, %11
+  %9 = phi i64 [ 0, %5 ], [ %12, %11 ]
+  %10 = phi i32 [ 0, %5 ], [ %28, %11 ]
+  br label %14
 
-7:                                                ; preds = %23
-  %8 = add nuw nsw i64 %5, 1
-  %9 = icmp eq i64 %8, 1024
-  br i1 %9, label %32, label %4, !llvm.loop !12
+11:                                               ; preds = %27
+  %12 = add nuw nsw i64 %9, 1
+  %13 = icmp eq i64 %12, 1024
+  br i1 %13, label %36, label %8, !llvm.loop !12
 
-10:                                               ; preds = %4, %23
-  %11 = phi i64 [ 510, %4 ], [ %25, %23 ]
-  %12 = phi i32 [ %6, %4 ], [ %24, %23 ]
-  %13 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %5, i64 %11
-  %14 = load i32, ptr %13, align 4, !tbaa !7
-  %15 = icmp eq i32 %14, 0
-  br i1 %15, label %23, label %16
+14:                                               ; preds = %8, %27
+  %15 = phi i64 [ 510, %8 ], [ %29, %27 ]
+  %16 = phi i32 [ %10, %8 ], [ %28, %27 ]
+  %17 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %9, i64 %15
+  %18 = load i32, ptr %17, align 4, !tbaa !7
+  %19 = icmp eq i32 %18, 0
+  br i1 %19, label %27, label %20
 
-16:                                               ; preds = %10
-  %17 = add nuw nsw i64 %11, 1
-  %18 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %5, i64 %17
-  %19 = load i32, ptr %18, align 4, !tbaa !7
-  %20 = icmp eq i32 %19, 0
-  br i1 %20, label %21, label %23
+20:                                               ; preds = %14
+  %21 = add nuw nsw i64 %15, 1
+  %22 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %9, i64 %21
+  %23 = load i32, ptr %22, align 4, !tbaa !7
+  %24 = icmp eq i32 %23, 0
+  br i1 %24, label %25, label %27
 
-21:                                               ; preds = %16
-  store i32 0, ptr %13, align 4, !tbaa !7
-  store i32 16777215, ptr %18, align 4, !tbaa !7
-  %22 = add nsw i32 %12, 1
-  br label %23
+25:                                               ; preds = %20
+  store i32 0, ptr %17, align 4, !tbaa !7
+  store i32 16777215, ptr %22, align 4, !tbaa !7
+  %26 = add nsw i32 %16, 1
+  br label %27
 
-23:                                               ; preds = %10, %16, %21
-  %24 = phi i32 [ %22, %21 ], [ %12, %16 ], [ %12, %10 ]
-  %25 = add nsw i64 %11, -1
-  %26 = icmp eq i64 %11, 0
-  br i1 %26, label %7, label %10, !llvm.loop !13
+27:                                               ; preds = %14, %20, %25
+  %28 = phi i32 [ %26, %25 ], [ %16, %20 ], [ %16, %14 ]
+  %29 = add nsw i64 %15, -1
+  %30 = icmp eq i64 %15, 0
+  br i1 %30, label %11, label %14, !llvm.loop !13
 
-27:                                               ; preds = %90
-  %28 = icmp sgt i32 %91, 0
-  br i1 %28, label %30, label %29
+31:                                               ; preds = %94
+  %32 = icmp sgt i32 %95, 0
+  br i1 %32, label %34, label %33
 
-29:                                               ; preds = %97, %27
-  br label %111
+33:                                               ; preds = %101, %31
+  br label %115
 
-30:                                               ; preds = %27
-  %31 = zext nneg i32 %91 to i64
-  br label %93
+34:                                               ; preds = %31
+  %35 = zext nneg i32 %95 to i64
+  br label %97
 
-32:                                               ; preds = %7, %90
-  %33 = phi i64 [ %38, %90 ], [ 0, %7 ]
-  %34 = phi i32 [ %91, %90 ], [ 510, %7 ]
-  %35 = icmp eq i64 %33, 0
-  %36 = add nsw i64 %33, -1
-  %37 = icmp eq i64 %33, 1023
-  %38 = add nuw nsw i64 %33, 1
-  br label %39
+36:                                               ; preds = %11, %94
+  %37 = phi i64 [ %42, %94 ], [ 0, %11 ]
+  %38 = phi i32 [ %95, %94 ], [ 510, %11 ]
+  %39 = icmp eq i64 %37, 0
+  %40 = add nsw i64 %37, -1
+  %41 = icmp eq i64 %37, 1023
+  %42 = add nuw nsw i64 %37, 1
+  br label %43
 
-39:                                               ; preds = %32, %79
-  %40 = phi i32 [ 510, %32 ], [ %82, %79 ]
-  %41 = phi i32 [ 0, %32 ], [ %80, %79 ]
-  %42 = phi i32 [ 0, %32 ], [ %81, %79 ]
-  %43 = phi i32 [ %34, %32 ], [ %49, %79 ]
-  %44 = zext nneg i32 %40 to i64
-  %45 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %33, i64 %44
-  %46 = load i32, ptr %45, align 4, !tbaa !7
-  %47 = icmp eq i32 %46, 0
-  br i1 %47, label %90, label %48
+43:                                               ; preds = %36, %83
+  %44 = phi i32 [ 510, %36 ], [ %86, %83 ]
+  %45 = phi i32 [ 0, %36 ], [ %84, %83 ]
+  %46 = phi i32 [ 0, %36 ], [ %85, %83 ]
+  %47 = phi i32 [ %38, %36 ], [ %53, %83 ]
+  %48 = zext nneg i32 %44 to i64
+  %49 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %37, i64 %48
+  %50 = load i32, ptr %49, align 4, !tbaa !7
+  %51 = icmp eq i32 %50, 0
+  br i1 %51, label %94, label %52
 
-48:                                               ; preds = %39
-  %49 = tail call i32 @llvm.smin.i32(i32 %43, i32 %40)
-  br i1 %35, label %58, label %50
+52:                                               ; preds = %43
+  %53 = call i32 @llvm.smin.i32(i32 %47, i32 %44)
+  br i1 %39, label %62, label %54
 
-50:                                               ; preds = %48
-  %51 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %36, i64 %44
-  %52 = load i32, ptr %51, align 4, !tbaa !7
-  %53 = icmp eq i32 %52, 0
-  %54 = add nsw i32 %42, 1
-  %55 = select i1 %53, i32 %54, i32 0
-  br i1 %37, label %56, label %58
+54:                                               ; preds = %52
+  %55 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %40, i64 %48
+  %56 = load i32, ptr %55, align 4, !tbaa !7
+  %57 = icmp eq i32 %56, 0
+  %58 = add nsw i32 %46, 1
+  %59 = select i1 %57, i32 %58, i32 0
+  br i1 %41, label %60, label %62
 
-56:                                               ; preds = %50
-  %57 = icmp eq i32 %55, 3
-  br i1 %57, label %76, label %79
+60:                                               ; preds = %54
+  %61 = icmp eq i32 %59, 3
+  br i1 %61, label %80, label %83
 
-58:                                               ; preds = %48, %50
-  %59 = phi i32 [ %55, %50 ], [ 0, %48 ]
-  %60 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %38, i64 %44
-  %61 = load i32, ptr %60, align 4, !tbaa !7
-  %62 = icmp eq i32 %61, 0
-  %63 = add nsw i32 %41, 1
-  %64 = select i1 %62, i32 %63, i32 0
-  %65 = icmp eq i32 %59, 3
-  %66 = icmp eq i32 %64, 3
-  %67 = select i1 %65, i1 %66, i1 false
-  br i1 %67, label %68, label %75
+62:                                               ; preds = %52, %54
+  %63 = phi i32 [ %59, %54 ], [ 0, %52 ]
+  %64 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %42, i64 %48
+  %65 = load i32, ptr %64, align 4, !tbaa !7
+  %66 = icmp eq i32 %65, 0
+  %67 = add nsw i32 %45, 1
+  %68 = select i1 %66, i32 %67, i32 0
+  %69 = icmp eq i32 %63, 3
+  %70 = icmp eq i32 %68, 3
+  %71 = select i1 %69, i1 %70, i1 false
+  br i1 %71, label %72, label %79
 
-68:                                               ; preds = %58
-  store i32 0, ptr %45, align 4, !tbaa !7
-  %69 = add nuw nsw i32 %40, 1
-  %70 = zext nneg i32 %69 to i64
-  %71 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %33, i64 %70
-  store i32 0, ptr %71, align 4, !tbaa !7
-  %72 = add nuw nsw i32 %40, 2
-  %73 = zext nneg i32 %72 to i64
-  %74 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %36, i64 %73
-  store i32 16777215, ptr %74, align 4, !tbaa !7
-  br label %84
+72:                                               ; preds = %62
+  store i32 0, ptr %49, align 4, !tbaa !7
+  %73 = add nuw nsw i32 %44, 1
+  %74 = zext nneg i32 %73 to i64
+  %75 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %37, i64 %74
+  store i32 0, ptr %75, align 4, !tbaa !7
+  %76 = add nuw nsw i32 %44, 2
+  %77 = zext nneg i32 %76 to i64
+  %78 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %40, i64 %77
+  store i32 16777215, ptr %78, align 4, !tbaa !7
+  br label %88
 
-75:                                               ; preds = %58
-  br i1 %65, label %76, label %77
+79:                                               ; preds = %62
+  br i1 %69, label %80, label %81
 
-76:                                               ; preds = %56, %75
-  store i32 0, ptr %45, align 4, !tbaa !7
-  br label %84
+80:                                               ; preds = %60, %79
+  store i32 0, ptr %49, align 4, !tbaa !7
+  br label %88
 
-77:                                               ; preds = %75
-  br i1 %66, label %78, label %79
+81:                                               ; preds = %79
+  br i1 %70, label %82, label %83
 
-78:                                               ; preds = %77
-  store i32 0, ptr %45, align 4, !tbaa !7
-  br label %84
+82:                                               ; preds = %81
+  store i32 0, ptr %49, align 4, !tbaa !7
+  br label %88
 
-79:                                               ; preds = %56, %77
-  %80 = phi i32 [ %64, %77 ], [ 0, %56 ]
-  %81 = phi i32 [ %59, %77 ], [ %55, %56 ]
-  %82 = add nsw i32 %40, -1
-  %83 = icmp eq i32 %40, 0
-  br i1 %83, label %90, label %39, !llvm.loop !14
+83:                                               ; preds = %60, %81
+  %84 = phi i32 [ %68, %81 ], [ 0, %60 ]
+  %85 = phi i32 [ %63, %81 ], [ %59, %60 ]
+  %86 = add nsw i32 %44, -1
+  %87 = icmp eq i32 %44, 0
+  br i1 %87, label %94, label %43, !llvm.loop !14
 
-84:                                               ; preds = %68, %76, %78
-  %85 = phi i32 [ -2, %68 ], [ -1, %76 ], [ -1, %78 ]
-  %86 = phi i64 [ %38, %68 ], [ %36, %76 ], [ %38, %78 ]
-  %87 = add nsw i32 %40, %85
-  %88 = sext i32 %87 to i64
-  %89 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %86, i64 %88
-  store i32 16777215, ptr %89, align 4, !tbaa !7
-  br label %90
+88:                                               ; preds = %72, %80, %82
+  %89 = phi i32 [ -2, %72 ], [ -1, %80 ], [ -1, %82 ]
+  %90 = phi i64 [ %42, %72 ], [ %40, %80 ], [ %42, %82 ]
+  %91 = add nsw i32 %44, %89
+  %92 = sext i32 %91 to i64
+  %93 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %90, i64 %92
+  store i32 16777215, ptr %93, align 4, !tbaa !7
+  br label %94
 
-90:                                               ; preds = %39, %79, %84
-  %91 = phi i32 [ %49, %84 ], [ %49, %79 ], [ %43, %39 ]
-  %92 = icmp eq i64 %38, 1024
-  br i1 %92, label %27, label %32, !llvm.loop !15
+94:                                               ; preds = %43, %83, %88
+  %95 = phi i32 [ %53, %88 ], [ %53, %83 ], [ %47, %43 ]
+  %96 = icmp eq i64 %42, 1024
+  br i1 %96, label %31, label %36, !llvm.loop !15
 
-93:                                               ; preds = %30, %97
-  %94 = phi i64 [ 0, %30 ], [ %99, %97 ]
-  %95 = getelementptr inbounds [512 x i32], ptr @imgNext, i64 0, i64 %94
-  %96 = load i32, ptr %95, align 4, !tbaa !7
-  br label %101
+97:                                               ; preds = %34, %101
+  %98 = phi i64 [ 0, %34 ], [ %103, %101 ]
+  %99 = getelementptr inbounds [512 x i32], ptr %2, i64 0, i64 %98
+  %100 = load i32, ptr %99, align 4, !tbaa !7
+  br label %105
 
-97:                                               ; preds = %101
-  %98 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 1023, i64 %94
-  store i32 %96, ptr %98, align 4, !tbaa !7
-  %99 = add nuw nsw i64 %94, 1
-  %100 = icmp eq i64 %99, %31
-  br i1 %100, label %29, label %93, !llvm.loop !16
+101:                                              ; preds = %105
+  %102 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 1023, i64 %98
+  store i32 %100, ptr %102, align 4, !tbaa !7
+  %103 = add nuw nsw i64 %98, 1
+  %104 = icmp eq i64 %103, %35
+  br i1 %104, label %33, label %97, !llvm.loop !16
 
-101:                                              ; preds = %93, %101
-  %102 = phi i64 [ 0, %93 ], [ %103, %101 ]
-  %103 = add nuw nsw i64 %102, 1
-  %104 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %103, i64 %94
-  %105 = load i32, ptr %104, align 4, !tbaa !7
-  %106 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %102, i64 %94
-  store i32 %105, ptr %106, align 4, !tbaa !7
-  %107 = icmp eq i64 %103, 1023
-  br i1 %107, label %97, label %101, !llvm.loop !17
+105:                                              ; preds = %97, %105
+  %106 = phi i64 [ 0, %97 ], [ %107, %105 ]
+  %107 = add nuw nsw i64 %106, 1
+  %108 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %107, i64 %98
+  %109 = load i32, ptr %108, align 4, !tbaa !7
+  %110 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %106, i64 %98
+  store i32 %109, ptr %110, align 4, !tbaa !7
+  %111 = icmp eq i64 %107, 1023
+  br i1 %111, label %101, label %105, !llvm.loop !17
 
-108:                                              ; preds = %124
-  tail call void @paint(i32 noundef 0) #5
-  tail call void @paint(i32 noundef 16777215) #5
-  tail call void (...) @simFlush() #4
-  %109 = add nuw nsw i32 %2, 1
-  %110 = icmp eq i32 %109, 1000000000
-  br i1 %110, label %3, label %1, !llvm.loop !18
+112:                                              ; preds = %128
+  call void @paint(i32 noundef 0, ptr noundef nonnull %1, ptr noundef nonnull %2, ptr noundef nonnull %3, ptr noundef nonnull %4) #7
+  call void @paint(i32 noundef 16777215, ptr noundef nonnull %1, ptr noundef nonnull %2, ptr noundef nonnull %3, ptr noundef nonnull %4) #7
+  call void (...) @simFlush() #5
+  %113 = add nuw nsw i32 %6, 1
+  %114 = icmp eq i32 %113, 1000000000
+  br i1 %114, label %7, label %5, !llvm.loop !18
 
-111:                                              ; preds = %29, %124
-  %112 = phi i32 [ %126, %124 ], [ 0, %29 ]
-  %113 = phi i32 [ %125, %124 ], [ %24, %29 ]
-  %114 = icmp slt i32 %113, 5000
-  br i1 %114, label %115, label %124
+115:                                              ; preds = %33, %128
+  %116 = phi i32 [ %130, %128 ], [ 0, %33 ]
+  %117 = phi i32 [ %129, %128 ], [ %28, %33 ]
+  %118 = icmp slt i32 %117, 5000
+  br i1 %118, label %119, label %128
 
-115:                                              ; preds = %111
-  %116 = tail call i32 @simRand() #4
-  %117 = srem i32 %116, 1024
-  %118 = sext i32 %117 to i64
-  %119 = getelementptr inbounds [1024 x [512 x i32]], ptr @imgNext, i64 0, i64 %118
-  %120 = load i32, ptr %119, align 16, !tbaa !7
-  %121 = icmp eq i32 %120, 0
-  br i1 %121, label %122, label %124
+119:                                              ; preds = %115
+  %120 = call i32 @simRand() #5
+  %121 = srem i32 %120, 1024
+  %122 = sext i32 %121 to i64
+  %123 = getelementptr inbounds [1024 x [512 x i32]], ptr %2, i64 0, i64 %122
+  %124 = load i32, ptr %123, align 16, !tbaa !7
+  %125 = icmp eq i32 %124, 0
+  br i1 %125, label %126, label %128
 
-122:                                              ; preds = %115
-  store i32 16777215, ptr %119, align 16, !tbaa !7
-  %123 = add nsw i32 %113, 1
-  br label %124
+126:                                              ; preds = %119
+  store i32 16777215, ptr %123, align 16, !tbaa !7
+  %127 = add nsw i32 %117, 1
+  br label %128
 
-124:                                              ; preds = %115, %122, %111
-  %125 = phi i32 [ %113, %111 ], [ %123, %122 ], [ %113, %115 ]
-  %126 = add nuw nsw i32 %112, 1
-  %127 = icmp eq i32 %126, 7
-  br i1 %127, label %108, label %111, !llvm.loop !19
+128:                                              ; preds = %119, %126, %115
+  %129 = phi i32 [ %117, %115 ], [ %127, %126 ], [ %117, %119 ]
+  %130 = add nuw nsw i32 %116, 1
+  %131 = icmp eq i32 %130, 7
+  br i1 %131, label %112, label %115, !llvm.loop !19
 }
 
 ; Function Attrs: optsize
-declare i32 @simRand() local_unnamed_addr #1
+declare i32 @simRand() local_unnamed_addr #2
 
 ; Function Attrs: optsize
-declare void @simFlush(...) local_unnamed_addr #1
+declare void @simFlush(...) local_unnamed_addr #2
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare i32 @llvm.smin.i32(i32, i32) #2
+declare i32 @llvm.smin.i32(i32, i32) #3
 
 ; Function Attrs: nocallback nofree nounwind willreturn memory(argmem: write)
-declare void @llvm.memset.p0.i64(ptr nocapture writeonly, i8, i64, i1 immarg) #3
+declare void @llvm.memset.p0.i64(ptr nocapture writeonly, i8, i64, i1 immarg) #4
 
 attributes #0 = { nounwind optsize uwtable "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
-attributes #1 = { optsize "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
-attributes #2 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
-attributes #3 = { nocallback nofree nounwind willreturn memory(argmem: write) }
-attributes #4 = { nounwind optsize }
-attributes #5 = { optsize }
+attributes #1 = { mustprogress nocallback nofree nosync nounwind willreturn memory(argmem: readwrite) }
+attributes #2 = { optsize "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+attributes #3 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
+attributes #4 = { nocallback nofree nounwind willreturn memory(argmem: write) }
+attributes #5 = { nounwind optsize }
+attributes #6 = { nounwind }
+attributes #7 = { optsize }
 
 !llvm.module.flags = !{!0, !1, !2, !3}
 !llvm.ident = !{!4}

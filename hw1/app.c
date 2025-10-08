@@ -7,12 +7,8 @@
 #define WHITE 0xFFFFFF
 #define BLACK 0
 
-static int imgPrev[SIM_X_SIZE][SIM_Y_SIZE];
-static int imgNext[SIM_X_SIZE][SIM_Y_SIZE];
-static int bufferX[BUFFER_SIZE];
-static int bufferY[BUFFER_SIZE];
-
-void paint(int color) {
+void paint(int color, int imgPrev[SIM_X_SIZE][SIM_Y_SIZE], int imgNext[SIM_X_SIZE][SIM_Y_SIZE],
+     int bufferX[BUFFER_SIZE], int bufferY[BUFFER_SIZE]) {
     int bufferCount = 0;
     for (int i = 0; i < SIM_X_SIZE; i++) {
         for (int j = 0; j < SIM_Y_SIZE; j++) {
@@ -31,6 +27,11 @@ void paint(int color) {
 }
 
 void app() {
+    int imgPrev[SIM_X_SIZE][SIM_Y_SIZE];
+    int imgNext[SIM_X_SIZE][SIM_Y_SIZE];
+    int bufferX[BUFFER_SIZE];
+    int bufferY[BUFFER_SIZE];
+
     for (int i = 0; i < SIM_X_SIZE; i++) {
         for (int j = 0; j < SIM_Y_SIZE; j++) {
             imgPrev[i][j] = BLACK;
@@ -110,8 +111,8 @@ void app() {
         }
 
         // painting
-        paint(BLACK);
-        paint(WHITE);
+        paint(BLACK, imgPrev, imgNext, bufferX, bufferY);
+        paint(WHITE, imgPrev, imgNext, bufferX, bufferY);
 
         simFlush();
     }
