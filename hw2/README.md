@@ -7,7 +7,7 @@ clang ../hw1/start.c ../hw1/sim.c app.ll -lSDL2 log.c -O2
 
 ---
 
-# Statistics:
+# Statistics for 1'000'000 lines:
 
 ## Top 5 most frequent 1-line sequences
 
