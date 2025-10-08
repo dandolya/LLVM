@@ -9,7 +9,7 @@ clang ../hw1/start.c ../hw1/sim.c app.ll -lSDL2 log.c -O2
 
 # Statistics for 1'000'000 lines:
 
-## Top 5 most frequent 1-line sequences
+## Top 5 most frequent 1-line sequences:
 
 - **222293**: 
 ```
@@ -32,7 +32,7 @@ clang ../hw1/start.c ../hw1/sim.c app.ll -lSDL2 log.c -O2
 [LOG] getelementptr <- alloca
 ```
 
-## Top 5 most frequent 2-line sequences
+## Top 5 most frequent 2-line sequences:
 
 - **111255**: 
 ```
@@ -60,7 +60,7 @@ clang ../hw1/start.c ../hw1/sim.c app.ll -lSDL2 log.c -O2
 [LOG] getelementptr <- add
 ```
 
-## Top 5 most frequent 3-line sequences
+## Top 5 most frequent 3-line sequences:
 
 - **111255**: 
 ```
@@ -93,7 +93,7 @@ clang ../hw1/start.c ../hw1/sim.c app.ll -lSDL2 log.c -O2
 [LOG] icmp <- load
 ```
 
-## Top 5 most frequent 4-line sequences
+## Top 5 most frequent 4-line sequences:
 
 - **111255**: 
 ```
@@ -131,7 +131,7 @@ clang ../hw1/start.c ../hw1/sim.c app.ll -lSDL2 log.c -O2
 [LOG] add <- add
 ```
 
-## Top 5 most frequent 5-line sequences
+## Top 5 most frequent 5-line sequences:
 - **111038**: 
 ```
 [LOG] getelementptr <- alloca
